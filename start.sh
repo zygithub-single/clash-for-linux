@@ -43,6 +43,7 @@ Conf_Dir="$Server_Dir/conf"
 Temp_Dir="$Server_Dir/temp"
 Log_Dir="$Server_Dir/logs"
 URL='更改为你的clash订阅地址'
+
 # 检查url是否有效
 Text1="Clash订阅地址可访问！"
 Text2="Clash订阅地址不可访问！"
@@ -53,6 +54,7 @@ if_success $Text1 $Text2
 # 临时取消环境变量
 unset http_proxy
 unset https_proxy
+unset no_proxy
 
 # 拉取更新config.yml文件
 Text3="配置文件config.yaml下载成功！"
@@ -71,9 +73,9 @@ cat $Temp_Dir/proxy.txt >> $Temp_Dir/config.yaml
 # 启动Clash服务
 Text5="服务启动成功！"
 Text6="服务启动失败！"
-nohup $Server_Dir/clash-linux-amd64-v1.3.5 -d $Conf_Dir &> $Log_Dir/clash.log &
+nohup $Server_Dir/bin/clash-linux-amd64 -d $Conf_Dir &> $Log_Dir/clash.log &
 if_success $Text5 $Text6
 
 # 添加环境变量(root权限)
-echo -e "export http_proxy=http://127.0.0.1:7890\nexport https_proxy=http://127.0.0.1:7890" > /etc/profile.d/clash.sh
-echo -e "系统代理http_proxy/https_proxy设置成功，请在当前窗口执行以下命令加载环境变量:\n\nsource /etc/profile.d/clash.sh\n"
+echo -e "export http_proxy=http://127.0.0.1:7890\nexport https_proxy=http://127.0.0.1:7890\nexport no_proxy=127.0.0.1,localhost" > /etc/profile.d/clash.sh
+echo -e "系统代理http_proxy/https_proxy/no_proxy设置成功，请在当前窗口执行以下命令加载环境变量:\n\nsource /etc/profile.d/clash.sh\n"
