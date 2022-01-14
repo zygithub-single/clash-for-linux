@@ -104,3 +104,4 @@ $ unset https_proxy
 - 此项目不提供任何订阅信息，请自行准备Clash订阅地址。
 - 运行前请手动更改`start.sh`脚本中的URL变量值，否则无法正常运行。
 - 当前在RHEL系列和Debian系列Linux系统中测试过，其他系列可能需要适当修改脚本。
+- 支持 x86_64/aarch64 平台
