@@ -58,7 +58,7 @@ unset no_proxy
 # 拉取更新config.yml文件
 Text3="配置文件config.yaml下载成功！"
 Text4="配置文件config.yaml下载失败，退出启动！"
-#wget -q -O $Temp_Dir/clash.yaml $URL
+# wget -q -O $Temp_Dir/clash.yaml $URL
 curl -s -o $Temp_Dir/clash.yaml $URL
 if_success $Text3 $Text4
 
