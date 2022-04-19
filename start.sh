@@ -47,7 +47,7 @@ URL='更改为你的clash订阅地址'
 # 检查url是否有效
 Text1="Clash订阅地址可访问！"
 Text2="Clash订阅地址不可访问！"
-curl -s --head $URL | head -n 1 | grep 'HTTP/1.[01] [23]..' > /dev/null
+curl -o /dev/null -s -m 10 --connect-timeout 10 -w %{http_code} $URL | grep '[23][0-9][0-9]'
 if_success $Text1 $Text2
 
 # 临时取消环境变量
