@@ -39,16 +39,22 @@ $ cd clash-for-linux
 
 ```bash
 $ sh start.sh
+Clash订阅地址可访问！                                      [  OK  ]
 配置文件config.yaml下载成功！                              [  OK  ]
 服务启动成功！                                             [  OK  ]
-系统代理http_proxy/https_proxy设置成功，请在当前窗口执行以下命令加载环境变量:
 
-source /etc/profile.d/clash.sh
+Clash Dashboard 访问地址：http://IP:9090/ui
+Secret：xxxxxxxxxxxxx
+
+请执行以下命令加载环境变量: source /etc/profile.d/clash.sh
+
+请执行以下命令开启系统代理: proxy_on
 
 ```
 
 ```bash
 $ source /etc/profile.d/clash.sh
+$ proxy_on
 ```
 
 - 检查服务端口
@@ -86,14 +92,13 @@ $ cd clash-for-linux
 
 ```bash
 $ sh shutdown.sh
-服务关闭成功，请在已打开的窗口执行以下命令：
-unset http_proxy
-unset https_proxy
+
+服务关闭成功，请执行以下命令关闭系统代理：proxy_off
+
 ```
 
 ```bash
-$ unset http_proxy
-$ unset https_proxy
+$ proxy_off
 ```
 
 然后检查程序端口、进程以及环境变量`http_proxy|https_proxy`，若都没则说明服务正常关闭。

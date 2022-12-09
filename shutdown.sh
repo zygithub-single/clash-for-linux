@@ -11,4 +11,4 @@ fi
 # 清除环境变量
 > /etc/profile.d/clash.sh
 
-echo -e "服务关闭成功，请在已打开的窗口执行以下命令：\nunset http_proxy\nunset https_proxy\nunset no_proxy"
+echo -e "\n服务关闭成功，请执行以下命令关闭系统代理：proxy_off\n"
