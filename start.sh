@@ -44,16 +44,16 @@ Temp_Dir="$Server_Dir/temp"
 Log_Dir="$Server_Dir/logs"
 URL='更改为你的clash订阅地址'
 
+# 临时取消环境变量
+unset http_proxy
+unset https_proxy
+unset no_proxy
+
 # 检查url是否有效
 Text1="Clash订阅地址可访问！"
 Text2="Clash订阅地址不可访问！"
 curl -o /dev/null -s -m 10 --connect-timeout 10 -w %{http_code} $URL | grep '[23][0-9][0-9]' &>/dev/null
 if_success $Text1 $Text2
-
-# 临时取消环境变量
-unset http_proxy
-unset https_proxy
-unset no_proxy
 
 # 拉取更新config.yml文件
 Text3="配置文件config.yaml下载成功！"
