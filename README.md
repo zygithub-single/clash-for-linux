@@ -50,6 +50,8 @@ Secret：xxxxxxxxxxxxx
 
 请执行以下命令开启系统代理: proxy_on
 
+若要临时关闭系统代理，请执行: proxy_off
+
 ```
 
 ```bash
