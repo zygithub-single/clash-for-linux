@@ -30,13 +30,13 @@ action() {
 
 # 判断命令是否正常执行 函数
 if_success() {
-	ReturnStatus=$3
-	if [ $ReturnStatus -eq 0 ]; then
-	        action "$1" /bin/true
-	else
-	        action "$2" /bin/false
-	        exit 1
-	fi
+  local ReturnStatus=$3
+  if [ $ReturnStatus -eq 0 ]; then
+          action "$1" /bin/true
+  else
+          action "$2" /bin/false
+          exit 1
+  fi
 }
 
 Server_Dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
@@ -51,6 +51,7 @@ unset https_proxy
 unset no_proxy
 
 # 检查url是否有效
+echo -e '\n正在检测订阅地址...'
 Text1="Clash订阅地址可访问！"
 Text2="Clash订阅地址不可访问！"
 for i in {1..10}
@@ -66,6 +67,7 @@ done
 if_success $Text1 $Text2 $ReturnStatus
 
 # 拉取更新config.yml文件
+echo -e '\n正在下载Clash配置文件...'
 Text3="配置文件config.yaml下载成功！"
 Text4="配置文件config.yaml下载失败，退出启动！"
 for i in {1..10}
@@ -97,6 +99,7 @@ sed -ri "s@^# external-ui:.*@external-ui: ${Dashboard_Dir}@g" $Conf_Dir/config.y
 Secret=`grep '^secret: ' $Conf_Dir/config.yaml | grep -Po "(?<=secret: ').*(?=')"`
 
 # 启动Clash服务
+echo -e '\n正在启动Clash服务...'
 Text5="服务启动成功！"
 Text6="服务启动失败！"
 # 获取CPU架构  x86_64/aarch64
