@@ -27,12 +27,13 @@ action() {
 
 # 函数，判断命令是否正常执行
 if_success() {
-	if [ $? -eq 0 ]; then
-	        action "$1" /bin/true
-	else
-	        action "$2" /bin/false
-	        exit 1
-	fi
+  local ReturnStatus=$3
+  if [ $ReturnStatus -eq 0 ]; then
+          action "$1" /bin/true
+  else
+          action "$2" /bin/false
+          exit 1
+  fi
 }
 
 # 定义路劲变量
@@ -48,25 +49,38 @@ PID_NUM=`ps -ef | grep [c]lash-linux-a | wc -l`
 PID=`ps -ef | grep [c]lash-linux-a | awk '{print $2}'`
 if [ $PID_NUM -ne 0 ]; then
 	kill -9 $PID
+  ReturnStatus=$?
 	# ps -ef | grep [c]lash-linux-a | awk '{print $2}' | xargs kill -9
 fi
-if_success $Text1 $Text2
+if_success $Text1 $Text2 $ReturnStatus
 
 sleep 3
 
-## 重启启动clash服务
-Text3="服务启动成功！"
-Text4="服务启动失败！"
-# 获取CPU架构  x86_64/aarch64
-get_arch=`/bin/arch`
-if [[ $get_arch =~ "x86_64" ]]; then
-	nohup $Server_Dir/bin/clash-linux-amd64 -d $Conf_Dir &> $Log_Dir/clash.log &
-	if_success $Text3 $Text4
-elif [[ $get_arch =~ "aarch64" ]]; then
-	nohup $Server_Dir/bin/clash-linux-armv7 -d $Conf_Dir &> $Log_Dir/clash.log &
-	if_success $Text3 $Text4
+## 获取CPU架构
+if /bin/arch &>/dev/null; then
+	CpuArch=`/bin/arch`
+elif /usr/bin/arch &>/dev/null; then
+	CpuArch=`/usr/bin/arch`
+elif /bin/uname -m &>/dev/null; then
+	CpuArch=`/bin/uname -m`
 else
-	echo -e "\033[31m[ERROR] Unsupported CPU Architecture！\033[0m"
+	echo -e "\033[31m\n[ERROR] Failed to obtain CPU architecture！\033[0m"
+	exit 1
+fi
+
+## 重启启动clash服务
+Text5="服务启动成功！"
+Text6="服务启动失败！"
+if [[ $CpuArch =~ "x86_64" ]]; then
+  nohup $Server_Dir/bin/clash-linux-amd64 -d $Conf_Dir &> $Log_Dir/clash.log &
+	ReturnStatus=$?
+	if_success $Text5 $Text6 $ReturnStatus
+elif [[ $CpuArch =~ "aarch64" ]]; then
+	nohup $Server_Dir/bin/clash-linux-armv7 -d $Conf_Dir &> $Log_Dir/clash.log &
+	ReturnStatus=$?
+	if_success $Text5 $Text6 $ReturnStatus
+else
+	echo -e "\033[31m\n[ERROR] Unsupported CPU Architecture！\033[0m"
 	exit 1
 fi
 

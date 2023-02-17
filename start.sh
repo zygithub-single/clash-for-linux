@@ -99,10 +99,12 @@ sed -ri "s@^# external-ui:.*@external-ui: ${Dashboard_Dir}@g" $Conf_Dir/config.y
 Secret=`grep '^secret: ' $Conf_Dir/config.yaml | grep -Po "(?<=secret: ').*(?=')"`
 
 # 获取CPU架构
-if arch &>/dev/null; then
-	CpuArch=`arch`
-elif uname -m &>/dev/null; then
-	CpuArch=`uname -m`
+if /bin/arch &>/dev/null; then
+	CpuArch=`/bin/arch`
+elif /usr/bin/arch &>/dev/null; then
+	CpuArch=`/usr/bin/arch`
+elif /bin/uname -m &>/dev/null; then
+	CpuArch=`/bin/uname -m`
 else
 	echo -e "\033[31m\n[ERROR] Failed to obtain CPU architecture！\033[0m"
 	exit 1
