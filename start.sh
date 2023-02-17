@@ -98,22 +98,30 @@ sed -ri "s@^# external-ui:.*@external-ui: ${Dashboard_Dir}@g" $Conf_Dir/config.y
 # Get RESTful API Secret
 Secret=`grep '^secret: ' $Conf_Dir/config.yaml | grep -Po "(?<=secret: ').*(?=')"`
 
+# 获取CPU架构
+if arch &>/dev/null; then
+	CpuArch=`arch`
+elif uname -m &>/dev/null; then
+	CpuArch=`uname -m`
+else
+	echo -e "\033[31m\n[ERROR] Failed to obtain CPU architecture！\033[0m"
+	exit 1
+fi
+
 # 启动Clash服务
 echo -e '\n正在启动Clash服务...'
 Text5="服务启动成功！"
 Text6="服务启动失败！"
-# 获取CPU架构  x86_64/aarch64
-get_arch=`/bin/arch`
-if [[ $get_arch =~ "x86_64" ]]; then
+if [[ $CpuArch =~ "x86_64" ]]; then
 	nohup $Server_Dir/bin/clash-linux-amd64 -d $Conf_Dir &> $Log_Dir/clash.log &
 	ReturnStatus=$?
 	if_success $Text5 $Text6 $ReturnStatus
-elif [[ $get_arch =~ "aarch64" ]]; then
+elif [[ $CpuArch =~ "aarch64" ]]; then
 	nohup $Server_Dir/bin/clash-linux-armv7 -d $Conf_Dir &> $Log_Dir/clash.log &
 	ReturnStatus=$?
 	if_success $Text5 $Text6 $ReturnStatus
 else
-	echo -e "\033[31m[ERROR] Unsupported CPU Architecture！\033[0m"
+	echo -e "\033[31m\n[ERROR] Unsupported CPU Architecture！\033[0m"
 	exit 1
 fi
 
