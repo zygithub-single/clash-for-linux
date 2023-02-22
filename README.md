@@ -4,7 +4,7 @@
 
 主要是为了解决我们在服务器上下载GitHub等一些国外资源速度慢的问题。
 
-
+<br>
 
 # 使用教程
 
@@ -106,7 +106,7 @@ $ proxy_off
 然后检查程序端口、进程以及环境变量`http_proxy|https_proxy`，若都没则说明服务正常关闭。
 
 
-
+<br>
 
 ### Clash Dashboard
 
@@ -124,9 +124,14 @@ $ proxy_off
 
 此 Clash Dashboard 使用的是[yacd](https://github.com/haishanh/yacd)项目，详细使用方法请移步到yacd上查询。
 
+<br>
+
+# 常见问题
+
+1.部分Ubuntu系统默认的 shell `/bin/sh` 被更改为 `dash`，运行脚本会出现报错。建议使用 `bash xxx.sh` 运行脚本。
 
 
-
+<br>
 
 # 使用须知
 
