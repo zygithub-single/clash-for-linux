@@ -20,7 +20,7 @@ $ git clone https://github.com/wanhebin/clash-for-linux.git
 
 ```bash
 $ cd clash-for-linux
-$ vim start.sh
+$ vim .env
 ```
 
 <br>
