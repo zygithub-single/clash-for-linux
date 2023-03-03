@@ -16,7 +16,7 @@
 $ git clone https://github.com/wanhebin/clash-for-linux.git
 ```
 
-进入到项目目录，编辑`start.sh`脚本文件，修改变量`URL`的值。
+进入到项目目录，编辑`.env`文件，修改变量`CLASH_URL`的值。
 
 ```bash
 $ cd clash-for-linux
@@ -151,6 +151,6 @@ $ proxy_off
 # 使用须知
 
 - 此项目不提供任何订阅信息，请自行准备Clash订阅地址。
-- 运行前请手动更改`start.sh`脚本中的URL变量值，否则无法正常运行。
+- 运行前请手动更改`.env`文件中的`CLASH_URL`变量值，否则无法正常运行。
 - 当前在RHEL系列和Debian系列Linux系统中测试过，其他系列可能需要适当修改脚本。
 - 支持 x86_64/aarch64 平台
