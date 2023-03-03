@@ -3,6 +3,17 @@
 # 加载系统函数库(Only for RHEL Linux)
 # [ -f /etc/init.d/functions ] && source /etc/init.d/functions
 
+# 获取脚本工作目录绝对路径
+Server_Dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+
+# 加载.env变量文件
+source $Server_Dir/.env
+
+Conf_Dir="$Server_Dir/conf"
+Temp_Dir="$Server_Dir/temp"
+Log_Dir="$Server_Dir/logs"
+URL=${CLASH_URL}
+
 # 自定义action函数，实现通用action功能
 success() {
   echo -en "\\033[60G[\\033[1;32m  OK  \\033[0;39m]\r"
@@ -38,12 +49,6 @@ if_success() {
           exit 1
   fi
 }
-
-Server_Dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
-Conf_Dir="$Server_Dir/conf"
-Temp_Dir="$Server_Dir/temp"
-Log_Dir="$Server_Dir/logs"
-URL='更改为你的clash订阅地址'
 
 # 临时取消环境变量
 unset http_proxy
