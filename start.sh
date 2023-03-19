@@ -61,9 +61,9 @@ Text1="Clash订阅地址可访问！"
 Text2="Clash订阅地址不可访问！"
 for i in {1..10}
 do
-        curl -o /dev/null -s -m 10 --connect-timeout 10 -w %{http_code} $URL | grep '[23][0-9][0-9]' &>/dev/null
+        wget --spider -T 5 -q -t 2 $URL > /dev/null
         ReturnStatus=$?
-        if [ $ReturnStatus -eq 0 ]; then
+        if [ $ReturnStatus -ne 0 ]; then
                 break
         else
                 continue
