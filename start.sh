@@ -59,9 +59,9 @@ unset no_proxy
 echo -e '\n正在检测订阅地址...'
 Text1="Clash订阅地址可访问！"
 Text2="Clash订阅地址不可访问！"
-for i in {1..10}
+for i in {1}
 do
-        wget --spider -T 5 -q -t 2 $URL > /dev/null
+        wget --spider -T 5 -q -t 2 $URL
         ReturnStatus=$?
         if [ $ReturnStatus -ne 0 ]; then
                 break
