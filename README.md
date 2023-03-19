@@ -41,27 +41,34 @@ $ cd clash-for-linux
 $ source start.sh
 
 正在检测订阅地址...
+
 Clash订阅地址可访问！                                      [  OK  ]
 
 正在下载Clash配置文件...
 配置文件config.yaml下载成功！                              [  OK  ]
+add service succ !
 
 正在启动Clash服务...
-服务启动成功！                                             [  OK  ]
+服务启动成功！
 
 Clash Dashboard 访问地址：http://IP:9090/ui
-Secret：xxxxxxxxxxxxx
-
-请执行以下命令加载环境变量: source /etc/profile.d/clash.sh
+Secret：xxxxxx
 
 请执行以下命令开启系统代理: proxy_on
 
 若要临时关闭系统代理，请执行: proxy_off
 
+systemctl start clash # start clash service
+
+systemctl enable clash # enable clash service
+
+systemctl stop clash # stop clash service
+
+
 ```
 
 ```bash
-$ source /etc/profile.d/clash.sh
+
 $ proxy_on
 ```
 
@@ -89,7 +96,7 @@ https_proxy=http://127.0.0.1:7890
 
 ### 重启程序
 
-如果需要对Clash配置进行修改，请修改 `conf/config.yaml` 文件。然后运行 `restart.sh` 脚本进行重启。
+systemctl restart clash
 
 > **注意：**
 > 重启脚本 `restart.sh` 不会更新订阅信息。
@@ -98,16 +105,9 @@ https_proxy=http://127.0.0.1:7890
 
 ### 停止程序
 
-- 进入项目目录
-
-```bash
-$ cd clash-for-linux
 ```
-
-- 关闭服务
-
-```bash
-$ sh shutdown.sh
+systemctl stop clash
+```
 
 服务关闭成功，请执行以下命令关闭系统代理：proxy_off
 
