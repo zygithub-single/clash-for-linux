@@ -63,6 +63,7 @@ for i in {1}
 do
         wget --spider -T 5 -q -t 2 $URL
         ReturnStatus=$?
+	echo $RetrunStatus
         if [ $ReturnStatus -ne 0 ]; then
                 break
         else
@@ -75,7 +76,7 @@ if_success $Text1 $Text2 $ReturnStatus
 echo -e '\n正在下载Clash配置文件...'
 Text3="配置文件config.yaml下载成功！"
 Text4="配置文件config.yaml下载失败，退出启动！"
-for i in {1..10}
+for i in {1}
 do
         #curl -s -o $Temp_Dir/clash.yaml $URL
         wget -q -O $Temp_Dir/clash.yaml $URL
@@ -115,21 +116,62 @@ else
 	exit 1
 fi
 
+if [[ $CpuArch =~ "x86_64" ]]; then
+	Arch_version="/bin/clash-linux-amd64"
+elif [[ $CpuArch =~ "aarch64" ]]; then
+	Arch_version="/bin/clash-linux-armv7"
+fi
+
 # 启动Clash服务
+#echo -e '\n正在启动Clash服务...'
+#Text5="服务启动成功！"
+#Text6="服务启动失败！"
+#if [[ $CpuArch =~ "x86_64" ]]; then
+#	nohup $Server_Dir/bin/clash-linux-amd64 -d $Conf_Dir &> $Log_Dir/clash.log &
+#	ReturnStatus=$?
+#	if_success $Text5 $Text6 $ReturnStatus
+#elif [[ $CpuArch =~ "aarch64" ]]; then
+#	nohup $Server_Dir/bin/clash-linux-armv7 -d $Conf_Dir &> $Log_Dir/clash.log &
+#	ReturnStatus=$?
+#	if_success $Text5 $Text6 $ReturnStatus
+#else
+#	echo -e "\033[31m\n[ERROR] Unsupported CPU Architecture！\033[0m"
+#	exit 1
+#fi
+cat>/etc/systemd/system/clash.service<<EOF
+[Unit]
+Description=Clash daemon, A rule-based proxy in Go.
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=$Server_Dir$Arch_version -d $Conf_Dir
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+if [ $? -eq 0 ]; then
+	echo "add service succ !"
+else
+	echo "add service fail QAQ"
+	
+fi
+
+
 echo -e '\n正在启动Clash服务...'
 Text5="服务启动成功！"
 Text6="服务启动失败！"
-if [[ $CpuArch =~ "x86_64" ]]; then
-	nohup $Server_Dir/bin/clash-linux-amd64 -d $Conf_Dir &> $Log_Dir/clash.log &
-	ReturnStatus=$?
-	if_success $Text5 $Text6 $ReturnStatus
-elif [[ $CpuArch =~ "aarch64" ]]; then
-	nohup $Server_Dir/bin/clash-linux-armv7 -d $Conf_Dir &> $Log_Dir/clash.log &
-	ReturnStatus=$?
-	if_success $Text5 $Text6 $ReturnStatus
+
+
+systemctl daemon-reload
+systemctl start clash
+systemctl enable clash
+if [ $? -eq 0 ]; then
+	echo $Text5
 else
-	echo -e "\033[31m\n[ERROR] Unsupported CPU Architecture！\033[0m"
-	exit 1
+	echo $Text6
 fi
 
 # Output Dashboard access address and Secret
@@ -139,24 +181,10 @@ echo -e "Secret：${Secret}"
 echo ''
 
 # 添加环境变量(root权限)
-cat>/etc/profile.d/clash.sh<<EOF
-# 开启系统代理
-function proxy_on() {
-	export http_proxy=http://127.0.0.1:7890
-	export https_proxy=http://127.0.0.1:7890
-	export no_proxy=127.0.0.1,localhost
-	echo -e "\033[32m[√] 已开启代理\033[0m"
-}
-
-# 关闭系统代理
-function proxy_off(){
-	unset http_proxy
-	unset https_proxy
-	unset no_proxy
-	echo -e "\033[31m[×] 已关闭代理\033[0m"
-}
-EOF
-
-echo -e "请执行以下命令加载环境变量: source /etc/profile.d/clash.sh\n"
+#echo -e "source /etc/profile.d/clash.sh\n"
+source /etc/profile.d/clash.sh
 echo -e "请执行以下命令开启系统代理: proxy_on\n"
 echo -e "若要临时关闭系统代理，请执行: proxy_off\n"
+echo -e "systemctl start clash # start clash service\n"
+echo -e "systemctl enable clash # enable clash service\n"
+echo -e "systemctl stop clash # stop clash service\n"
