@@ -38,7 +38,7 @@ $ cd clash-for-linux
 - 运行启动脚本
 
 ```bash
-$ source start.sh
+$ sh start.sh
 
 正在检测订阅地址...
 
